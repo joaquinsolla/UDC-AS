@@ -1,0 +1,13 @@
+@startuml Sistema  videojuegos cliente-servidor distribuido
+title Sistema  videojuegos cliente-servidor distribuido (nivel de contexto)
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+Person_Ext(client, "Cliente", "Quiere hacer uso del sistema de videojuegos")
+System(systemDCS, "Sistema cliente-servidor distribuido", "Recibe peticiones de los clientes, las procesa y devuelve una respuesta")
+
+Rel(client, systemDCS, "Envía", "Petición")
+Rel(systemDCS, client, "Devuelve", "Respuesta")
+
+SHOW_FLOATING_LEGEND()
+
+@enduml

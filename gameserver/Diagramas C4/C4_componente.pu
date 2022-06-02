@@ -1,0 +1,54 @@
+@startuml Sistema  videojuegos cliente-servidor distribuido
+title Sistema  videojuegos cliente-servidor distribuido (nivel de componente)
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+Person_Ext(client, "Cliente", "Quiere hacer uso del sistema de videojuegos")
+
+Boundary(system, "Sistema videojuegos cliente-servidor distribuido", "System"){
+    Boundary(directorio, "Servidor", "Container"){
+        Component(dir, "Directorio", "Publica el API accesible a los clientes y redirige peticiones a los servicios correspondientes")
+        Component(supervisor_dir, "Supervisor del Directorio", "Supervisa el estado del directorio y lo arranca de nuevo en caso de error")
+        Rel(dir,supervisor_dir, "Envía", "Mensaje con el motivo de finalización del proceso")
+        Rel(supervisor_dir,dir, "Envía","Mensaje de arranque del directorio")
+    }
+    Boundary(serverLogin, "Servidor Login", "Container"){
+        Component(login, "Login lista juegos", "Recibe peticiones, las procesa y devuelve la lista de juegos disponibles")
+        Component(supervisor_login, "Supervisor del Login", "Supervisa el estado del login y lo arranca de nuevo en caso de error")
+        Rel(login,supervisor_login, "Envía", "Mensaje con el motivo de finalización del proceso")
+        Rel(supervisor_login,login, "Envía","Mensaje de arranque del login")
+    }
+    Boundary(serverPiedraPapelTijeras, "Servidor Piedra, Papel, Tijera", "Container"){
+        Component(piedraPapelTijeras, "Piedra, papel, tijera", "Recibe peticiones, las procesa y devuelve el ganador del juego")
+        Component(roomsManager1, "Actualizar de salas", "Recibe peticiones del juego para actualizar las salas de jugadores")
+        Component(supervisor_piedra, "Supervisor del Juego", "Supervisa el estado del juego y lo arranca de nuevo en caso de error")
+        
+    
+        Rel(piedraPapelTijeras, roomsManager1, "Envía", "Petición actualizar sala")
+        Rel(roomsManager1, piedraPapelTijeras, "Devuelve", "Sala actualizada")
+        Rel(piedraPapelTijeras,supervisor_piedra, "Envía", "Mensaje con el motivo de finalización del proceso")
+        Rel(supervisor_piedra,piedraPapelTijeras, "Envía","Mensaje de arranque del juego")
+    }
+    Boundary(serverParesNones, "Servidor Pares o Nones", "Container"){
+        Component(paresNones, "Pares o nones", "Recibe peticiones, las procesa y devuelve el ganador del juego")
+        Component(roomsManager2, "Actualizar de salas", "Recibe peticiones del juego para actualizar las salas de jugadores")
+        Component(supervisor_pares, "Supervisor del Juego", "Supervisa el estado del juego y lo arranca de nuevo en caso de error")
+    
+        Rel(paresNones, roomsManager2, "Envía", "Petición actualizar sala")
+        Rel(roomsManager2, paresNones, "Devuelve", "Sala actualizada")
+        Rel(paresNones,supervisor_pares, "Envía", "Mensaje con el motivo de finalización del proceso")
+        Rel(supervisor_pares,paresNones, "Envía","Mensaje de arranque del juego")
+    }
+}
+
+Rel(client, dir, "Envía", "Petición")
+Rel(dir, client, "Devuelve", "Respuesta")
+Rel(dir, login, "Redirige", "Petición")
+Rel(login, dir, "Responde", "Lista de juegos disponibles")
+Rel(dir, piedraPapelTijeras, "Redirige", "Petición")
+Rel(piedraPapelTijeras, dir, "Responde", "Ganador, perdedor y mensaje para cada uno")
+Rel(dir, paresNones, "Redirige", "Petición")
+Rel(paresNones, dir, "Responde", "Ganador, perdedor y mensaje para cada uno")
+
+SHOW_FLOATING_LEGEND()
+
+@enduml

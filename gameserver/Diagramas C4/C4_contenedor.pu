@@ -1,0 +1,33 @@
+@startuml Sistema  videojuegos cliente-servidor distribuido
+title Sistema  videojuegos cliente-servidor distribuido (nivel de contenedor)
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+Person_Ext(client, "Cliente", "Quiere hacer uso del sistema de videojuegos")
+
+Boundary(system, "Sistema videojuegos cliente-servidor distribuido", "System"){
+    Boundary(directorio, "Servidor", "Container"){
+        Component(dir, "Directorio", "Publica el API accesible a los clientes y redirige peticiones a los servicios correspondientes")
+    }
+    Boundary(serverLogin, "Servidor Login", "Container"){
+        Component(login, "Login lista juegos", "Recibe peticiones, las procesa y devuelve la lista de juegos disponibles")
+    }
+    Boundary(serverPiedraPapelTijeras, "Servidor Piedra, Papel, Tijera", "Container"){
+         Component(piedraPapelTijeras, "Piedra, papel, tijera", "Recibe peticiones, las procesa y devuelve el ganador del juego")
+    }
+    Boundary(serverParesNones, "Servidor Pares o Nones", "Container"){
+        Component(paresNones, "Pares o nones", "Recibe peticiones, las procesa y devuelve el ganador del juego")
+    }
+}
+
+Rel(client, dir, "Envía", "Petición")
+Rel(dir, client, "Devuelve", "Respuesta")
+Rel(dir, login, "Redirige", "Petición")
+Rel(login, dir, "Responde", "Lista de juegos disponibles")
+Rel(dir, piedraPapelTijeras, "Redirige", "Petición")
+Rel(piedraPapelTijeras, dir, "Responde", "Ganador, perdedor y mensaje para cada uno")
+Rel(dir, paresNones, "Redirige", "Petición")
+Rel(paresNones, dir, "Responde", "Ganador, perdedor y mensaje para cada uno")
+
+SHOW_FLOATING_LEGEND()
+
+@enduml
