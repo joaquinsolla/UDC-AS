@@ -1,0 +1,39 @@
+@startuml pipeline_echo_componente
+title Componente pipeline echo
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+System_Ext(usuario, Usuario, "Usuario que inicia el servidor.")
+
+Boundary(servidor, "Servidor echo"){
+    System(start, "start", "Se inicia el servidor echo."){
+        Component(startStart, "start")
+        Component(startStartAux, "start_aux")
+    }
+    System(msg_creation, "msg_creation", "Se crea el mensaje."){
+        Component(creationCreation, "creacion del mensaje")
+        Component(creationSend, "envío del mensaje")
+    }
+    System(msg_processing, "msg_processing", "Se procesa el mensaje."){
+        Component(processingReception, "recepción del mensaje")
+        Component(processingProcessing, "procesamiento del mensaje")
+        Component(processingSend, "envío del mensaje")
+    }
+    System(msg_print, "msg_print", "Se imprime el mensaje."){
+        Component(printReception, "recepción del mensaje")
+        Component(printSend, "envío del mensaje al terminal")
+    }
+}
+
+Rel(usuario, startStart, Inicio servidor echo, "n")
+startStart --> startStartAux
+startStartAux --> creationCreation
+Rel(creationCreation, creationSend, Envía, "msg")
+Rel(creationSend, processingReception, Envía, "msg")
+Rel(processingReception, processingProcessing, Envía, "msg")
+Rel(processingProcessing, processingSend, Envía, "final_msg")
+Rel(processingSend, printReception, Envía, "final_msg")
+Rel(printReception, printSend, Envía, "final_msg")
+Rel(printSend, terminal, IO.puts, "final_msg")
+
+SHOW_LEGEND()
+@enduml

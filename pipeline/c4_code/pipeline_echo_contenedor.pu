@@ -1,0 +1,21 @@
+@startuml pipeline_echo_contenedor
+title Contenedor pipeline echo
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+System_Ext(usuario, Usuario, "Usuario que inicia el servidor.")
+
+Boundary(servidor, "Servidor echo"){
+    Component(start, "start", "Se inicia el servidor echo.")
+    Component(msg_creation, "msg_creation", "Se crea el mensaje.")
+    Component(msg_processing, "msg_processing", "Se procesa el mensaje.")
+    Component(msg_print, "msg_print", "Se imprime el mensaje.")
+}
+
+Rel(usuario, start, Inicio servidor echo, "n")
+start --> msg_creation
+Rel(msg_creation, msg_processing, Envía, "msg")
+Rel(msg_processing, msg_print, Envía, "final_msg")
+Rel(msg_print, terminal, IO.puts, "final_msg")
+
+SHOW_LEGEND()
+@enduml

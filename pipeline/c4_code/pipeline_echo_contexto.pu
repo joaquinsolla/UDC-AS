@@ -1,0 +1,12 @@
+@startuml pipeline_echo_contexto
+title Contexto pipeline echo
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+System_Ext(usuario, Usuario, "Usuario que inicia el servidor.")
+
+System(servidor, "Servidor", "Servidor echo que repite los mensajes recibidos.")
+
+Rel(usuario, servidor, Inicio servidor echo, "n")
+Rel(servidor, terminal, IO.puts, "final_msg")
+
+@enduml
